@@ -1,0 +1,216 @@
+(function ($) {
+
+    $(document).ready(function () {
+        $(".cookie-dismiss").click(function (e) {
+            e.preventDefault();
+            $.cookie("cookie-message", "1", {expires: 60, path: "/"});
+            $("#cookie-message").hide();
+            $("#toplinks-wrap").css('top', '127px');
+        });
+        if (!$.cookie("cookie-message")) {
+            $("#cookie-message").show();
+            $("#toplinks-wrap").css('top', '155px');
+        }
+
+        $('.carousel').bcSwipe({threshold: 50});
+        $("#mobile-menu").on('click', function (e) {
+            $("#accordion").toggle('linear');
+            var addBlue = $('body').hasClass('makeBlue');
+            if ($("#mobile-menu span").hasClass('glyphicon-menu-hamburger')) {
+                $("#mobile-menu span").removeClass('glyphicon-menu-hamburger').addClass('glyphicon-remove');
+            } else {
+                $("#mobile-menu span").removeClass('glyphicon-remove').addClass('glyphicon-menu-hamburger');
+            }
+
+        });
+
+        $('[data-toggle="tooltip"]').tooltip();
+        $('form[data-name="sonata-ajax"]').on('submit', function (e) {
+            e.preventDefault();
+
+            var self = $(this);
+
+            $.ajax({
+                type: self.attr('method'),
+                url: self.attr('action'),
+                data: self.serialize(),
+                success: function (data) {
+                    var element = self.attr('data-target');
+
+                    if (data) {
+                        $('#' + element).html(data);
+                    }
+                }
+            });
+        });
+
+        $(".panel-online-val, .page-call-to-action .col-md-4, .product-panel, .sbasket, .image-tile").on('click', function (e) {
+            //  find the link and go to it.
+            var clickedElement = e.target;
+            if (clickedElement.nodeName != 'A') {
+                var thislink = $(this).find("a").attr('href');
+                window.location = thislink;
+            }
+        });
+
+        $(".product-panel").hover(function () {
+            $(this).toggleClass("product-hover");
+        });
+        $("li.active > a > span").removeClass("glyphicon-menu-right").addClass("glyphicon-menu-down");
+        $("li.current_ancestor > a > span").removeClass("glyphicon-menu-right").addClass("glyphicon-menu-down");
+
+        $('.collapse').on('shown.bs.collapse', function (e) {
+            if ($(this).is(e.target)) {
+                $(e.target).parent().find(".glyphicon-menu-right").first().removeClass("glyphicon-menu-right").addClass("glyphicon-menu-down");
+
+            }
+        }).on('hidden.bs.collapse', function (e) {
+
+            if ($(this).is(e.target)) {
+                // e.stopPropagation();
+                $(e.target).parent().find(".glyphicon-menu-down").first().removeClass("glyphicon-menu-down").addClass("glyphicon-menu-right");
+
+            }
+        });
+
+        if ($('.basket')) {
+            var update_basket = false;
+
+            $(".basket input[type=number]").on('change', function (e) {
+                update_basket = true;
+            });
+
+            $(".basket input[type=checkbox]").on('change', function (e) {
+                update_basket = true;
+            });
+
+            $(".sonata-basket-nextstep").on('click', function (e) {
+                if (update_basket) {
+                    if (!confirm(basket_update_confirmation_message)) {
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+
+
+        $("body").on('click', "[type=submit]", function () {
+            $("[type=submit]", $(this).parents("form")).removeAttr("clicked");
+            $(this).attr("clicked", "true");
+        });
+
+        $("form").submit(function () {
+            var btn = $("[type=submit][clicked=true]");
+            btn.prop('disabled', true);
+        });
+
+
+        $("body").on('click', ".payment-type-selector", function () {
+            var type = $(this).data('type');
+            var radio = $('form[name=order_pay_again_payment_type]').find('[value=' + type + ']');
+
+            radio.trigger('click');
+            $('form[name=order_pay_again_payment_type]').submit();
+            $('.payment-type-selector').prop('disabled', true);
+        });
+
+
+        $('body').on('click', 'a.product-link', function (e) {
+
+            var p = $(this).parents('.product-panel').data();
+            var _thumb = $(this).parents('.panel.product-panel');
+            var list = "Product catalogue";
+            var url = $(this).attr('href');
+            var index = $('.product-grid .panel.product-panel').index(_thumb);
+
+
+            if (window.location.pathname.indexOf('search') !== -1) {
+                list = 'Search results';
+                index = $('.search-results .panel.product-panel').index(_thumb);
+            } else if ($(this).parents('.collection-container').length) {
+                    list = 'Product collection: ' + $(this).parents('.collection-container').data('title');
+                index = $(this).parents('.collection-carousel').find('.panel.product-panel').index(_thumb);
+            } else if ($(this).parents('.feature-row').length) {
+                index = $(this).parents('.feature-row').find('.panel.product-panel').index(_thumb);
+                list = 'Latest items';
+            }
+
+            dataLayer.push({
+                'event': 'productClick',
+                'ecommerce': {
+                    'click': {
+                        'actionField': {'list': list}, // Optional list property.
+                        'products': [{
+                                'name': p.name, // Name or ID is required.
+                                'id': p.barcode,
+                                'price': p.price,
+                                'brand': p.brand,
+                                'category': p.catategory,
+                                'position': index
+                            }]
+                    }
+                },
+                'eventCallback': function () {
+                    console.log('product click: ' + p.barcode);
+                    document.location = url + '?list=' + list;
+                }
+            });
+
+            return false;
+        });
+
+
+        appear({
+            init: function init() {
+                $('.panel.product-panel').addClass('watchable');
+                //console.log($('.watchable').length);
+            },
+            elements: function elements() {
+                // work with all elements with the class "track"
+                return document.getElementsByClassName('watchable');
+            },
+            appear: function appear(el) {
+                var p = $(el).data();
+                var _thumb = $(el);
+                var list = "Product catalogue";
+                var index = $('.product-grid .watchable').index(_thumb);
+
+
+                if (window.location.pathname.indexOf('search') !== -1) {
+                    list = 'Search results';
+                    index = $('.search-results .watchable').index(_thumb);
+                } else if ($(el).parents('.collection-container').length) {
+                    list = 'Product collection: ' + $(el).parents('.collection-container').data('title');
+                    index = $(el).parents('.collection-carousel').find('.watchable').index(_thumb);
+                } else if ($(el).parents('.feature-row').length) {
+                    index = $(el).parents('.feature-row').find('.watchable').index(_thumb);
+                    list = 'Latest items';
+                }
+                
+                dataLayer.push({
+                    'ecommerce': {
+                        'currencyCode': 'GBP',
+                        'impressions': [{
+                                'name': p.name, // Name or ID is required.
+                                'id': p.barcode,
+                                'price': p.price,
+                                'brand': p.brand,
+                                'category': p.catategory,
+                                'position': index,
+                                'list' : list
+                            }]
+                    }
+                });
+                console.log('visible product '+p.barcode +', list: '+list);
+            },
+            disappear: function disappear(el) {
+                //console.log('no longer visible', el);
+            },
+            bounds: -30,
+            reappear: false
+        });
+
+
+    });
+
+}(jQuery));

@@ -1,0 +1,13 @@
+
+    (function () {
+        var block = document.getElementById("block-cms-645");
+
+        var div = document.createElement("div");
+        div.innerHTML = "\n\n    <div style=\"display:inline;\">\n                    <a href=\"\/login\">Log In \/ Register<\/a>\n            <\/div>\n\n";
+
+        for (var node in div.childNodes) {
+            if (div.childNodes[node] && div.childNodes[node].nodeType == 1) {
+                block.parentNode.replaceChild(div.childNodes[node], block);
+            }
+        }
+    })();

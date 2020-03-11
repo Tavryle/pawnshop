@@ -1,0 +1,237 @@
+
+var amount = 500;//350;
+var term = 6;//3
+/*document.getElementById('amountValue').value =  amount;*/
+/*document.getElementById('termValue').value = term ;*/
+document.getElementById('amountValueVis').value = amount;
+document.getElementById('termValueVis').value = term;
+calculate( parseInt(amount), parseInt(term));
+    
+function updateAmount(newAmount)
+{
+  amount = newAmount;
+  document.getElementById('amountValueVis').value =  newAmount;
+  calculate( parseInt(newAmount), parseInt(term));
+}
+
+function updateTerm(newTerm)
+{
+  term = newTerm;
+  document.getElementById('termValueVis').value = newTerm;
+  calculate( parseInt(amount), parseInt(newTerm));
+}
+
+function AmountKey(newvalue)
+{   
+  if(newvalue == '' || parseInt(newvalue) < 50)
+  {
+    newvalue = 50;
+  }
+  changeAmount(parseInt(newvalue));
+}
+function changeAmount(amount)
+{
+  if(amount > 1000)
+  {
+    amount = 1000;
+  }else if(amount < 0)
+  {
+    amount = 0;
+  }
+  if(!Number.isNaN(amount)){
+    document.getElementById('amountValueVis').value = amount;
+    updateAmount(amount);
+  }
+  //document.getElementById('amountrangeinput').value = amount / 10;
+}
+function TermKey(newvalue)
+{   
+  if(newvalue == '' || parseInt(newvalue) < 3)
+  {
+    newvalue = 3;
+  }
+  
+  changeTerm(parseInt(newvalue));
+}
+
+function calculate(loan, term)
+{ 
+    var fixed_cost_percentage = 0.2;
+    var fixed_cost = 20.0;
+    var fixed_monthly_rate = 0.12; // was .07
+
+    var orig_loan_cost = loan*fixed_cost_percentage+fixed_cost;
+    var orig_total_loan = loan+orig_loan_cost;
+    var orig_term = term;
+    var orig_monthly_rate = 0.12; // was .07
+    var orig_installment = -PMT(orig_monthly_rate,orig_term,orig_total_loan).toFixed(2);
+
+    var cap_loan_cost = 0;
+    var cap_total_loan = loan;
+    var cap_term = term;
+    var cap_monthly_rate = 0.222;
+    var cap_installment = -PMT(cap_monthly_rate,cap_term,cap_total_loan).toFixed(2);
+
+    var installment = Math.min(orig_installment,cap_installment);
+    var total_payable = installment*term;
+    var interest = total_payable-loan;  
+  
+    if((interest > loan) && (term <=17))
+    {
+      document.getElementById('borrowing').innerHTML = '-';
+      document.getElementById('interest').innerHTML ='-';
+      document.getElementById('total').innerHTML ='Not Available';
+      //document.getElementById('borrowingMob').innerHTML = '-';
+      document.getElementById('interestMob').innerHTML ='-';
+      /*document.getElementById('totalMob').innerHTML = 'Not Available';*/
+      document.getElementById('monthlyPayment').innerHTML = 'Not Available';
+      //document.getElementById('monthlyPaymentMob').innerHTML = 'Not Available';
+    }
+    else
+    {
+      document.getElementById('borrowing').innerHTML = '£ ' + loan;
+      document.getElementById('interest').innerHTML ='£ '+interest.toFixed(2);
+      document.getElementById('total').innerHTML ='£ '+total_payable.toFixed(2);
+      //document.getElementById('borrowingMob').innerHTML = '£' + loan;
+      //document.getElementById('interestMob').innerHTML ='£ '+interest.toFixed(2);
+      /*document.getElementById('totalMob').innerHTML = '£ ' + total_payable.toFixed(2);*/
+      document.getElementById('monthlyPayment').innerHTML = '£ ' + (parseFloat(total_payable) / parseFloat(document.getElementById('termValueVis').value)).toFixed(2);
+      //document.getElementById('monthlyPaymentMob').innerHTML = '£ ' + (parseFloat(total_payable) / parseFloat(document.getElementById('termValueVis').value)).toFixed(2);
+    }
+  }
+
+function PMT(ir, np, pv, fv, type)
+{    
+      var pmt, pvif;
+
+      fv || (fv = 0);
+      type || (type = 0);
+
+      if (ir === 0)
+          return -(pv + fv)/np;
+
+      pvif = Math.pow(1 + ir, np);
+      pmt = - ir * pv * (pvif + fv) / (pvif - 1);
+
+      if (type === 1)
+          pmt /= (1 + ir);
+
+      return pmt;
+  }
+
+  var hasJob = 0;
+  var hasBank = 0;
+  var hasEarn = 0;
+
+  var enteredHasJob = 0;
+  var enteredHasBank = 0;
+  var enteredHasEarn = 0;
+
+  function job(has)
+  {
+    hasjob = has;
+    enteredHasJob = 1;
+    if(has==1)
+    {
+      document.getElementById('job-yes').style.display = 'block';
+      document.getElementById('job-no').style.display = 'none';
+    }
+    else
+    {
+      document.getElementById('job-yes').style.display = 'none';
+      document.getElementById('job-no').style.display = 'block';
+    }
+
+    likelyHoodOfSuccess();
+  }
+
+  function bank(has)
+  {
+    hasbank = has;
+    enteredHasBank = 1;
+    if(has==1)
+    {
+      document.getElementById('bank-yes').style.display = 'block';
+      document.getElementById('bank-no').style.display = 'none';
+    }
+    else
+    {
+      document.getElementById('bank-yes').style.display = 'none';
+      document.getElementById('bank-no').style.display = 'block';
+    }
+
+    likelyHoodOfSuccess();
+  }
+
+  function earn(has)
+  {
+    enteredHasEarn = 1;
+    hasearn = has;
+    if(has==1)
+    {
+      document.getElementById('earn-yes').style.display = 'block';
+      document.getElementById('earn-no').style.display = 'none';
+    }
+    else
+    {
+      document.getElementById('earn-yes').style.display = 'none';
+      document.getElementById('earn-no').style.display = 'block';
+    }
+
+    likelyHoodOfSuccess();
+  }
+
+  function likelyHoodOfSuccess()
+  {
+    var allEntered = enteredHasJob + enteredHasBank + enteredHasEarn;
+    if(allEntered == 3)
+    {
+      document.getElementById('qResults').style.display = 'block';
+      var qResultText =  document.getElementById('qResultText');
+  
+      var total = (hasjob + hasbank + hasearn);
+      var resultColour = 'red';
+      var result = 'POOR';
+      if(total ==2)
+      {
+        resultColour = 'orange';
+        result = 'FAIR';
+      }
+      if(total == 3)
+      {
+        resultColour = 'green';
+        result = 'GOOD';
+      }
+  
+      document.getElementById('qResultText').style.color = resultColour;
+      document.getElementById('qResultText').innerHTML = result;
+    }
+  }
+
+
+
+  function changeTerm(term)
+  {
+    if(term > 24)
+    {
+      term = 24;
+    }
+    if(term < 0)
+    {
+      term = 0;
+    }
+
+    document.getElementById('termValueVis').value = term;
+    //document.getElementById('termrangeinput').value= term;
+    updateTerm(term);
+  }
+  
+  
+  
+(function($){
+    $('body').on('click', '.btn-apply', function(e){
+        e.preventDefault();
+        
+        location.assign('http://cashloans.cashconverters.co.uk?amt='+$('#amountValueVis').val());
+    });
+}(jQuery));  

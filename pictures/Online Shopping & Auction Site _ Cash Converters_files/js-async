@@ -1,0 +1,13 @@
+
+    (function () {
+        var block = document.getElementById("block-cms-652");
+
+        var div = document.createElement("div");
+        div.innerHTML = "\n\n    <div style=\"display:inline; margin-left:10px;\">\n        <span class=\"glyphicon glyphicon-shopping-cart\"><\/span>\n        <a href=\"\/shop\/basket\/\">\n            <span class=\"bnum\">0<\/span><span class=\"basket_title\"> Your Basket<\/span>\n        <\/a>\n    <\/div>\n\n";
+
+        for (var node in div.childNodes) {
+            if (div.childNodes[node] && div.childNodes[node].nodeType == 1) {
+                block.parentNode.replaceChild(div.childNodes[node], block);
+            }
+        }
+    })();
