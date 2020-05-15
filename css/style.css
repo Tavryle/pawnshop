@@ -1,34 +1,36 @@
 .sicons
 {
-float:left;
-	padding:25px;
-	margin:auto;
-	float:justify;
-margin-left:540px;
+  display: flex;
+  float: right;
+  padding:25px;
+  top: 200px;
 }
-
-
 body
 {
-font-family: serif;
-background-color:#fffff0;
+  font-family: serif;
+  background-color:#fffff0;
+}
+.ban{
+  text-align: center;
+  background-color: black;
 }
 nav
 {
-padding:7px;
-background:#4169e1;
-margin:4px;
-
+  height: 55px;
+  padding:19px;
+  background:black;
+  display: flex;
+  justify-content: center;
 }
 a 
 {
-    color:#ffffff;
-	padding:15px;
+  color:#ffffff;
+  padding:15px;
 	text-decoration:none;
 }
 nav a:hover
 {
-background:#b38600;
+background:#996515;
 }
 * {box-sizing:border-box}
 
@@ -130,12 +132,17 @@ background:#b38600;
 
 .coll3
 {
-width:20%;
-border:10px solid black;
-float:left;
-padding:7px;
-border-color:black;
-margin-left:50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+img {
+  margin: 5px;
+  transition: all 1s;
+}
+
+img:hover{
+  transform: scale(1.1);
 }
 .clear
 {
@@ -143,10 +150,11 @@ clear:both;
 }
 footer
 {
-text-align:center;
-background:#4169e1;
-color:white;
-
+  width: auto;
+  height: auto;
+  
+  background:black;
+  color:white;
 }
 .coll2
 {
@@ -164,9 +172,8 @@ width:30%;
  }
 input[type="submit"]
 {
-background-color:yellow; 
-padding:19px;
- color:#7777345;
+  background-color:yellow; 
+  padding:19px;
  }
 input[type="email"],select,textarea
  {
@@ -177,8 +184,8 @@ input[type="email"],select,textarea
 input[type="radio"],select,textarea
 {
 background-color:#343f3a; 
-padding:30px 
-color:yellow;
+padding:30px; 
+color :yellow;
 }
 input [type="text"],select,placeholder
 {
@@ -195,19 +202,12 @@ padding:5px;
 border:5px solid #b38600;
 }
 .coll4
- {
- float:right;
-width:38%; 
-border-radius:aqua; 
-padding:6px;
-border:5px solid #b38600;
-}
-
-.aboutus
 {
-margin:10px;
-float:left;
-
+  float: center;
+  width:38%; 
+  border-radius:aqua; 
+  padding:6px;
+  border-radius: 4px solid #996515;
 }
 .print
 {
@@ -250,14 +250,12 @@ width:100%;
 
 .coll7
 {
-width:20%;
-padding:10px;
-margin-left:50px;
-margin-right:25px;
-background-color:white;
-
-float:right;
-border-color:black;
+  width:20%;
+  padding:10px;
+  margin-left:50px;
+  margin-right:25px;
+  float:right;
+  border-color:black;
 
 }
 .coll7:hover
@@ -268,16 +266,15 @@ background-color:#b38600;
 .coll6
 {
 width:30%;
-border:6px solid white;
+
 float:left;
 padding:7px;
-border-color:white;
 margin:10px;
 }
 .coll9
 {
 width:23%;
-border:10px solid white;
+
 float:left;
 padding:10px;
 border-color:white;
@@ -285,20 +282,15 @@ margin-left:50px;
 }
 .wrapper3
 {
-width:100%;
-align:center;
-
-
-
+  width:100%;
+  text-align:center;
 }
 
 .coll0
 {
-width:19%;
-border:7px solid white;
+width:20%;
 float:left;
 padding:20px;
-border-color:white;
 margin-left:50px;
 }
 .coll99
@@ -308,8 +300,8 @@ margin-left:50px;
 	margin:10px;
 	border:10px solid white;
 	float:left;
-	
-	
-	
-	
+}
+footer{
+  height: 100px;
+  clear: both;
 }
